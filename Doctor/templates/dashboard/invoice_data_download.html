@@ -1,0 +1,226 @@
+{% comment %} {% extends 'dashboard/index.html' %} {% endcomment %}
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    
+    {% comment %} <link href="{% static 'dashboard/css/sb-admin-2.css' %}" rel="stylesheet"> {% endcomment %}
+    <link href="{% static 'dashboard/css/sb-admin-2.min.css' %}" rel="stylesheet">
+    <link href="{% static 'dashboard/css/dashboard.css' %}" rel="stylesheet">
+    <style>
+        .d3{
+            color:blue;
+        }
+        strong{
+            font-size:13px;
+        }
+        .table_heading{
+            font-size:13px;
+            font-weight:500;
+        }
+      
+            
+
+    </style>
+</head>
+
+<body>
+    <p>-------------------------------------------<strong class='d3' style='font-size:40px;;'>Your care hospital</strong>-------------------------------------------------</p><br><br>
+    {% for i,j in patient_profile_data2 %}
+<div class="container mt-6 mb-7">
+    <div class="row justify-content-center">
+      <div class="col-lg-12 col-xl-7">
+        <div class="card">
+          <div class="card-body p-5">
+            <h2>
+              Hi ,{{i.patientId.patient_user.name}}
+            </h2>
+          
+
+            <div class="border-top border-gray-200 pt-4 mt-4">
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                    <div class="text-muted ">Order Id  :  <strong>{{j.razor_pay_order_id}}</strong></div><br>
+                    {% comment %} <strong>{{j.razor_pay_order_id}}</strong><br><br> {% endcomment %}
+
+                    <div class="text-muted ">Payment Id :  <strong>{{j.razor_pay_payment_id}}</strong></div><br>
+                   
+
+                    <div class="text-muted mt-1">payment_signature Id :  <strong>{{j.razor_pay_payment_signature}}</strong> <br></div>
+                   
+
+                    
+                    </div>
+                    <div class="col-md-6 text-md-end mt-1">
+                    <div class="text-muted mb-2">Payment Date :  <strong>{{j.payment_date| date:"D d M Y H:i:s"  }}</strong></div>
+                   
+                    </div>
+               
+                </div>
+               
+               
+            </div>
+            <hr>
+
+
+
+
+            <div class="border-top border-gray-200 mt-4 py-4">
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="text-muted ">Client</div>
+                  <strong >
+                    {{i.patientId.patient_user.name}} : ({{i.patientId.patient_user.email}})
+                  </strong>
+                 
+                </div><br>
+                <div class="col-md-6 text-md-end">
+                  <div class="text-muted mb-2">Payment To</div>
+                  <strong>
+                    Your care : ( sakib@123.com)
+                  </strong>
+    
+                </div>
+              </div>
+            </div><br><br>
+
+
+            <div class="border-top border-gray-200 mt-4 py-4">
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="text-muted mb-2">Admitted Date</div>
+                  <strong>
+                    {{i.admitDate| date:"D d M Y" }}
+                  </strong>
+                  
+                </div><br>
+                <div class="col-md-6 text-md-end">
+                  <div class="text-muted mb-2">Discharge Date</div>
+                  <strong>
+                    {{i.releaseDate| date:"D d M Y" }}
+                  </strong>
+                  
+                </div>
+              </div>
+            </div>
+            <hr>
+
+
+
+
+
+            <table class="table border-bottom border-gray-200 mt-3">
+              <thead>
+                <tr style='margin-right:29rem;'>
+                  <th scope="col" class="table_heading" >Description</th>
+                  <th scope="col" class="table_heading">Amount</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% comment %} <tr>
+                  <td class="px-0">Day spent</td>
+                  <td class="text-end px-0"> {{i.daySpent}} days</td>
+                </tr> {% endcomment %}
+                
+                <tr >
+                  <td class="px-0" >Room charges</td>
+                  <td class=" px-0"> Rs {{i.roomCharge}} * {{i.daySpent}} days </td>
+                </tr>
+                <tr>
+                  <td class="px-0">Medicine Cost</td>
+                  <td class="text-end px-0">Rs {{i.medicineCost}}</td>
+                </tr>
+                 <tr>
+                  <td class="px-0">Doctor charges</td>
+                  <td class="text-end px-0">Rs {{i.doctorFee}}</td>
+                </tr>
+                 <tr>
+                  <td class="px-0">OtherCharge </td>
+                  <td class="text-end px-0">Rs {{i.OtherCharge}}</td>
+                </tr>
+              </tbody>
+            </table>
+            
+
+
+            <div class="mt-5">
+              <div class="d-flex justify-content-end">
+                <p class="text-muted me-3">Sub Total : <strong>Rs {{i.Total}}</strong></p>
+              
+                
+              </div>
+              <div class="d-flex justify-content-end">
+                <p class="text-muted me-3">Discount : <strong>Rs 200</strong></p>
+              </div>
+              <div class="d-flex justify-content-end mt-3">
+                <h5 class="me-3 table_heading">Total:Rs {{i.Total|add:'-200'}}</h5>
+                <input type="hidden" value="{{i.Total|add:'-200'}}" id='total_amount'>
+                <h5 class="text-success"></h5>
+              </div>
+            </div>
+          </div>
+         
+          
+
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+
+
+    
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{% comment %} {% block css %} 
+<style>
+
+  
+</style>
+{% endblock css %}
+
+
+
+
+
+{% block content %}
+
+
+
+{% endblock content %}
+
+
+{% block js %} 
+
+{% endblock js %} {% endcomment %}
+
+   

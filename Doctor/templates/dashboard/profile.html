@@ -1,0 +1,635 @@
+{% extends 'dashboard/index.html' %}
+{% load static %}
+
+{% block css %} 
+<style>
+    .img_block{
+        border:2px solid black;
+        border-radius:50%;
+        width:6rem;
+        height:5rem;
+    }
+
+
+</style>
+{% endblock css %}
+
+
+
+
+
+{% block content %}
+{% if request.user.is_doctor %}
+    {% for i in curr_profile %}
+    <div class="container">
+    <div class="col  d-flex  justify-content-center ">
+        <img src="{{i.img.url}}"  class='img_block' alt="error">
+
+        
+
+    </div>
+    <div class="col  mt-4">
+        <div class="heading-content d-flex justify-content-center">
+            <h2 style='color:black; font-weight:600'>Profile Details</h2>
+        </div>
+        <div class="row g-3 m-2" >
+            <div class="col-md-6">
+                <label for="name" class="form-label">Name</label>
+                <input type="text" class="form-control" readonly value="{{i.doctor_user.name}}" id="name">
+            </div>
+            <div class="col-md-6">
+            <label for="inputEmail4" class="form-label">Email</label>
+            <input type="email" class="form-control" value="{{i.doctor_user.email}}" readonly id="inputEmail4">
+            </div>
+
+            <div class="col-md-3">
+                <label for="qualification" class="form-label">qualification</label>
+                <input type="email" class="form-control" value="{{i.Qualification}}" readonly id="qualification">
+                
+            </div>
+
+            <div class="col-md-3">
+                <label for="Speciality" class="form-label">Speciality</label>
+                <input type="email" class="form-control" value="{{i.Speciality}}" readonly id="Speciality">
+            </div>
+
+            <div class="col-md-3">
+                <label for="State" class="form-label">State</label>
+                <input type="text" class="form-control" value="{{i.state}}" readonly id="State">
+            </div>
+
+            <div class="col-md-3">
+                <label for="city" class="form-label">city</label>
+                <input type="text" class="form-control" value="{{i.city}}" readonly id="city">
+            </div>
+            <div class="col-2">
+                <label for="Experience" class="form-label">Experience</label>
+                <input type="text" class="form-control" value="{{i.experience}}" readonly id="Experience" placeholder="">
+            </div>
+            
+            <div class="col-2">
+            <label for="Mobile" class="form-label">Mobile</label>
+            <input type="text" class="form-control" value="{{i.Mobile_no}}" readonly id="Mobile" placeholder="">
+            </div>
+            <div class="col-2">
+            <label for="age" class="form-label">age</label>
+            <input type="text" class="form-control" value="{{i.age}}" readonly id="age" placeholder="">
+            </div>
+
+        
+
+            <div class="col-2">
+                <label for="Fees" class="form-label">Fees</label>
+                <input type="text" class="form-control" value="{{i.fees}}"  readonly id="Fees" placeholder="">
+            </div>
+
+            <div class="col-md-2">
+                <label for="gender" class="form-label">gender</label>
+                <input type="text" class="form-control" value="{{i.Gender}}" readonly id="gender" placeholder="">
+            
+            </div>
+
+            <div class="col-md-2">
+                <label for="Language" class="form-label">Language</label>
+                <input type="text" class="form-control" value="{{i.Languages}}" readonly id="Language" placeholder="">
+
+            
+            </div>
+
+            <div class="col-md-6">
+                <label for="Description" class="form-label">Description</label>
+                <textarea class="form-control" readonly  placeholder="Leave a comment here" id="Description">{{i.Description}}</textarea>
+            
+            
+            </div>
+
+
+            <!--update details-->
+
+
+            <div class="footer_form d-flex justify-content-around">
+                <!-- Button trigger modal update details -->
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                    Update Details
+                </button>
+    
+                <!-- Modal  update details-->
+                <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-xl">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="staticBackdropLabel">Modal title</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            
+                            {% comment %} <form class="container" action="{% url 'profile_edit' %}" method="post" enctype="multipart/form-data"> {% endcomment %}
+                            <form class="container" action="{% url 'profile' %}" method="POST">
+                                {% csrf_token %}
+                            
+                                <input type="hidden" name='type' value="doctor">
+                                <input type="hidden" name="id" value="{{i.id}}">
+                                <div class="col-lg-12  d-flex  justify-content-center ">    
+                                    <img src="{{i.img.url}}"  class='img_block' alt="error">               
+                                    {% comment %} <input type="file" id='update_update_upload-img' name='img'> {% endcomment %}
+        
+                                </div> 
+                                <div class="col-lg-12  m-3">
+                                    
+                                    <div class="row  g-3 m-4 ">
+                                        <div class=" col-lg-4 col-md-6">
+                                            <label for="update_name" class="form-label">Name</label>
+                                            <input type="text" class="form-control" name='name'  value="{{i.doctor_user.name}}" id="update_name">
+                                        </div>
+                                        <div class="col-md-4">
+                                        <label for="update_Email" class="form-label">Email</label>
+                                        <input type="email" name='email' class="form-control" readonly value="{{i.doctor_user.email}}"  id="update_Email">
+                                        </div>
+                                
+                                        <div class="col-md-3">
+                                            <label for="update_qualification" class="form-label">qualification</label>
+                                            <input type="text" class="form-control" value="{{i.Qualification}}"  name="qualification"id="update_qualification">
+                                            
+                                        </div>
+                                
+                                        <div class="col-md-3">
+                                            <label for="update_Speciality" class="form-label">Speciality</label>
+                                            <select class="form-select" id="update_Speciality" name='speciality' aria-label="Floating label select example">
+                                                
+                                                
+                                                <option value='' disabled selected hidden >Specialist</option>
+                                            {% if i.Speciality == "Cardiologist" %}
+                                                <option value="Cardiologist" selected >Cardiologist</option>
+                                                {% else %}
+                                                <option value="Cardiologist"  >Cardiologist</option>
+                                                {% endif %}
+                                            
+                                                {% if i.Speciality == "Audiologists" %}
+                                                <option value="Audiologists" selected>Audiologists </option>
+                                                {% else %}
+                                                <option value="Audiologists" >Audiologists </option>
+                                                {% endif %}
+
+                                                {% if i.Speciality == "Dentist" %}
+                                                <option value="Dentist" selected>Dentist </option>
+                                                {% else %}
+                                                <option value="Dentist" >Dentist </option>
+                                                {% endif %}
+
+                                                {% if i.Speciality == "Cardiothoracic Surgeon" %}
+                                                <option value="Cardiothoracic Surgeon" selected>Cardiothoracic Surgeon </option>
+                                                {% else %}
+                                                <option value="Cardiothoracic Surgeon" >Cardiothoracic Surgeon </option>
+                                                {% endif %}
+
+                                                {% if i.Speciality == "Endocrinologist" %}
+                                                <option value="Endocrinologist" selected>Endocrinologist </option>
+                                                {% else %}
+                                                <option value="Endocrinologist" >Endocrinologist </option>
+                                                {% endif %}
+
+                                                {% if i.Speciality == "ENT Specialists" %}
+                                                <option value="ENT Specialists" selected>ENT Specialists </option>
+                                                {% else %}
+                                                <option value="ENT Specialists" >ENT Specialists </option>
+                                                {% endif %}
+
+                                                {% if i.Speciality == "Gynecologists" %}
+                                                <option value="Gynecologists" selected>Gynecologists </option>
+                                                {% else %}
+                                                <option value="Gynecologists" >Gynecologists </option>
+                                                {% endif %}
+
+                                                {% if i.Speciality == "Neurologists" %}
+                                                <option value="Neurologists" selected>Neurologists </option>
+                                                {% else %}
+                                                <option value="Neurologists" >Neurologists </option>
+                                                {% endif %}
+
+                                                {% if i.Speciality == "Oncologists" %}
+                                                <option value="Oncologists" selected>Oncologists </option>
+                                                {% else %}
+                                                <option value="Oncologists" >Oncologists </option>
+                                                {% endif %}
+
+                                                {% if i.Speciality == "Orthopedic" %}
+                                                <option value="Orthopedic" selected>Orthopedic </option>
+                                                {% else %}
+                                                <option value="Orthopedic" >Orthopedic </option>
+                                                {% endif %}
+
+                                                {% if i.Speciality == "Pediatrician" %}
+                                                <option value="Pediatrician" selected>Pediatrician </option>
+                                                {% else %}
+                                                <option value="Pediatrician" >Pediatrician </option>
+                                                {% endif %}
+
+                                                {% if i.Speciality == "Psychiatrists" %}
+                                                <option value="Psychiatrists" selected>Psychiatrists </option>
+                                                {% else %}
+                                                <option value="Psychiatrists" >Psychiatrists </option>
+                                                {% endif %}
+
+                                                {% if i.Speciality == "Pulmonologists" %}
+                                                <option value="Pulmonologists" selected>Pulmonologists </option>
+                                                {% else %}
+                                                <option value="Pulmonologists" >Pulmonologists </option>
+                                                {% endif %}
+                                                
+                                            </select>
+                                        </div>
+                                
+                                        <div class="col-md-3">
+                                            <label for="update_State" class="form-label">State</label>
+                                            <input type="text" class="form-control" name="state" value="{{i.state}}" id="update_State">
+                                        </div>
+                                
+                                        <div class="col-md-3">
+                                            <label for="update_city" class="form-label">city</label>
+                                            <input type="text" name="city" class="form-control" value="{{i.city}}"  id="update_city">
+                                        </div>
+                                        <div class="col-2">
+                                            <label for="update_Experience" class="form-label">Experience</label>
+                                            <input type="text" name="experience" class="form-control" value="{{i.experience}}" id="update_Experience" placeholder="">
+                                        </div> 
+                                        
+                                        <div class="col-2">
+                                        <label for="update_Mobile" class="form-label">Mobile</label>
+                                        <input type="text" class="form-control" value="{{i.Mobile_no}}" name="mobile" id="update_Mobile" placeholder="">
+                                        </div>
+                                        <div class="col-1">
+                                        <label for="update_age" class="form-label">age</label>
+                                        <input type="text" class="form-control" name="age" value="{{i.age}}" id="update_age" placeholder="">
+                                        </div>
+                                
+                                        
+                                
+                                        <div class="col-2">
+                                            <label for="update_Fees" class="form-label">Fees</label>
+                                            <input type="text" class="form-control" name="fees" value="{{i.fees}}" id="update_Fees" placeholder="">
+                                        </div>
+                                
+                                        <div class="col-md-2">
+                                            <label for="update_gender" class="form-label">gender</label>
+                                            <select class="form-select" id="update_gender" aria-label="Floating label select example" name='gender'>
+                                                <option selected></option>
+                                                {% if i.Gender == 'Male' %}
+                                                <option value="Male" selected >Male</option>
+                                                {% else %}
+                                                <option value="Male" >Male</option>
+                                                {% endif %}
+
+                                                {% if i.Gender == 'Female' %}
+                                                <option value="Female" selected>Female</option>
+                                                {% else %}
+                                                <option value="Female" >Female</option>
+                                                {% endif %}
+                                            </select>
+                                            
+                                        </div>
+                                
+                                        <div class="col-md-3">
+                                            <label for="update_Language" class="form-label">Language</label>
+                                            <input type="text" class="form-control" value="{{i.Languages}}" name="language" id="update_Language" placeholder="">
+                                
+                                            
+                                        </div> 
+                                
+                                        <div class="col-md-6">
+                                            <label for="update_Description" class="form-label">Description</label>
+                                            <textarea class="form-control"  name="description" placeholder="Leave a comment here" id="update_Description">{{i.Description}}</textarea>
+                                            
+                                            
+                                        </div> 
+                        
+                                    </div>
+                                
+                                </div> 
+
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                
+                                    <button type="submit" class="btn btn-success" >update</button> 
+                                </div>
+                                
+                            </form>
+                                
+
+                            
+                            
+                            
+                        
+                        </div>
+                        {% comment %} <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-success" id="update_btn">update</button>
+                        </div> {% endcomment %}
+                    </div>
+                    </div>
+                </div>
+
+                <!-- Button trigger modal  change password-->
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#changePassword">
+                    Change Password
+                </button>
+    
+                <!-- Modal change password-->
+                <div class="modal fade" id="changePassword" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="staticBackdropLabel">Modal title</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form action="#">
+                                <div class="mb-3">
+                                <label for="old_password" class="form-label">Old password</label>
+                                <input type="password" class="form-control" id="old_password" aria-describedby="emailHelp">
+                                </div>
+                                <div class="mb-3">
+                                <label for="new_Password1" class="form-label">Password</label>
+                                <input type="password" class="form-control" id="new_Password1">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="new_Password2" class="form-label">Confirm password</label>
+                                    <input type="password" class="form-control" id="new_Password2">
+                                </div>
+                            
+                                <button type="submit" class="btn btn-primary">Submit</button>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary">Understood</button>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+            </div> 
+        </div>
+    
+    </div>
+
+    </div>
+    {% endfor %}
+
+{% else %}
+<!--patient part-->
+
+
+{% for i in curr_profile %}
+<div class="container">
+<div class="col  d-flex  justify-content-center ">
+    <img src="{{i.img.url}}"  class='img_block' alt="error">
+
+    
+
+</div>
+<div class="col  mt-4">
+    <div class="heading-content d-flex justify-content-center">
+        <h2 style='color:black; font-weight:600'>Profile Details</h2>
+    </div>
+    <div class="row g-3 m-2" >
+        <div class="col-md-6">
+            <label for="name" class="form-label">Name</label>
+            <input type="text" class="form-control" readonly value="{{i.patient_user.name}}" id="name">
+        </div>
+        <div class="col-md-6">
+        <label for="inputEmail4" class="form-label">Email</label>
+        <input type="email" class="form-control" value="{{i.patient_user.email}}" readonly id="inputEmail4">
+        </div>
+
+        
+
+       
+
+        <div class="col-md-3">
+            <label for="location" class="form-label">Location</label>
+            <input type="text" class="form-control" value="{{i.Location}}" readonly id="location">
+        </div>
+
+        
+        
+        
+        <div class="col-2">
+        <label for="Mobile" class="form-label">Mobile</label>
+        <input type="text" class="form-control" value="{{i.Mobile_no}}" readonly id="Mobile" placeholder="">
+        </div>
+        <div class="col-2">
+        <label for="age" class="form-label">age</label>
+        <input type="text" class="form-control" value="{{i.age}}" readonly id="age" placeholder="">
+        </div>
+
+    
+
+       
+
+        <div class="col-md-2">
+            <label for="gender" class="form-label">gender</label>
+            <input type="text" class="form-control" value="{{i.Gender}}" readonly id="gender" placeholder="">
+        
+        </div>
+
+       
+
+
+
+        <!--update details-->
+
+
+        <div class="footer_form d-flex justify-content-around">
+            <!-- Button trigger modal update details -->
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                Update Details
+            </button>
+
+            <!-- Modal  update details-->
+            <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog modal-xl">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Modal title</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        
+                        {% comment %} <form class="container" action="{% url 'profile_edit' %}" method="post" enctype="multipart/form-data"> {% endcomment %}
+                        <form class="container" action="{% url 'profile' %}" method="POST">
+                            {% csrf_token %}
+                        
+                            <input type="hidden" name='type' value="patient">
+                            <input type="hidden" name="id" value="{{i.id}}">
+                            <div class="col-lg-12  d-flex  justify-content-center ">    
+                                <img src="{{i.img.url}}"  class='img_block' alt="error">               
+                                {% comment %} <input type="file" id='update_update_upload-img' name='img'> {% endcomment %}
+    
+                            </div> 
+                            <div class="col-lg-12  m-3">
+                                
+                                <div class="row  g-3 m-4 ">
+                                    <div class=" col-lg-4 col-md-6">
+                                        <label for="update_name" class="form-label">Name</label>
+                                        <input type="text" class="form-control" name='name'  value="{{i.patient_user.name}}" id="update_name">
+                                    </div>
+                                    <div class="col-md-4">
+                                    <label for="update_Email" class="form-label">Email</label>
+                                    <input type="email" name='email' class="form-control" readonly value="{{i.patient_user.email}}"  id="update_Email">
+                                    </div>
+                            
+                                    
+                            
+                                    <div class="col-md-3">
+                                        <label for="location" class="form-label">Location</label>
+                                        <input type="text" class="form-control" value="{{i.Location}}" name="location" id="location">
+                                    </div>
+                            
+                                    
+                                    
+                                    
+                                    <div class="col-2">
+                                    <label for="update_Mobile" class="form-label">Mobile</label>
+                                    <input type="text" class="form-control" value="{{i.Mobile_no}}" name="mobile" id="update_Mobile" placeholder="">
+                                    </div>
+                                    <div class="col-1">
+                                    <label for="update_age" class="form-label">age</label>
+                                    <input type="text" class="form-control" name="age" value="{{i.age}}" id="update_age" placeholder="">
+                                    </div>
+                            
+                                    
+                            
+                                    
+                            
+                                    <div class="col-md-2">
+                                        <label for="update_gender" class="form-label">gender</label>
+                                        <select class="form-select" id="update_gender" aria-label="Floating label select example" name='gender'>
+                                            <option selected></option>
+                                            {% if i.Gender == 'Male' %}
+                                            <option value="Male" selected >Male</option>
+                                            {% else %}
+                                            <option value="Male" >Male</option>
+                                            {% endif %}
+
+                                            {% if i.Gender == 'Female' %}
+                                            <option value="Female" selected>Female</option>
+                                            {% else %}
+                                            <option value="Female" >Female</option>
+                                            {% endif %}
+                                        </select>
+                                        
+                                    </div>
+                                </div>
+                            
+                            </div> 
+
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            
+                                <button type="submit" class="btn btn-success" >update</button> 
+                            </div>
+                            
+                        </form>
+                            
+
+                        
+                        
+                        
+                    
+                    </div>
+                    {% comment %} <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-success" id="update_btn">update</button>
+                    </div> {% endcomment %}
+                </div>
+                </div>
+            </div>
+
+            <!-- Button trigger modal  change password-->
+            {% comment %} <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#changePassword">
+                Change Password
+            </button> {% endcomment %}
+
+            <!-- Modal change password-->
+            {% comment %} <div class="modal fade" id="changePassword" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Modal title</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="#">
+                            <div class="mb-3">
+                            <label for="old_password" class="form-label">Old password</label>
+                            <input type="password" class="form-control" id="old_password" aria-describedby="emailHelp">
+                            </div>
+                            <div class="mb-3">
+                            <label for="new_Password1" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="new_Password1">
+                            </div>
+                            <div class="mb-3">
+                                <label for="new_Password2" class="form-label">Confirm password</label>
+                                <input type="password" class="form-control" id="new_Password2">
+                            </div>
+                        
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Understood</button>
+                    </div>
+                </div>
+                </div>
+            </div> {% endcomment %}
+        </div>
+
+
+ 
+    </div>
+
+</div>
+
+</div>
+{% endfor %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{% endif %}
+
+
+
+    {% endblock content %}
+
+
+    {% block js %} 
+    <script>
+        $('.ui.dropdown').dropdown();
+       
+    
+    </script>
+    {% endblock js %}
+   
+
+   

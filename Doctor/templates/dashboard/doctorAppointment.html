@@ -1,0 +1,201 @@
+{% extends 'dashboard/index.html' %}
+{% load static %}
+
+{% block css %} 
+<style>
+    .img-profile{
+        width:50px;
+        height:50px;
+        object-fit:cover;
+    } 
+    .swal-button--confirm{
+         background-color: #f05884 !important;
+    }
+</style>
+{% endblock css %}
+
+
+
+
+
+{% block content %}
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Appointment Data</h1>
+    <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
+            class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
+</div>
+
+
+    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+
+        <!-- Area Chart -->
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">List</h6>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>Img</th>
+                                <th>patient Name</th>
+                                <th>age</th>
+                                <th>description</th>
+                                <th>Appointment Date</th>
+                                <th>Action</th>
+                                <th>is Admit</th>
+                                
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for i in appointment_data %}
+                            <tr>
+                                
+                                <td>{{forloop.counter}}</td>
+                                <td>
+                                    <img class="img-profile rounded-circle "
+                                    src="{{i.Patient_id.img.url}}" alt='error'>
+                                </td>
+                                <td>{{i.Patient_id.patient_user.name}}</td>
+                                <td>{{i.Patient_id.age}}</td>
+                                <td>{{i.description}}</td>
+                                <td>{{i.appointmentDate}}</td>
+                                <td>
+
+                                    {% if not  i.is_accepted_by_doctor and  not i.is_rejected_by_doctor  %}
+                                    <input class="btn btn-primary delete_btn m-1" data-Id='none' id='{{i.id}}' value='Accept' onclick="Approved_Appointment_data(this,{{i.id}},{{i.Patient_id.id}},{{i.Doctor_id.id}})" type='submit'>
+
+                                    <input class="btn btn-primary delete_btn m-1" id='{{i.id}}' value='Reject' onclick="Approved_Appointment_data(this,{{i.id}},{{i.Patient_id.id}},{{i.Doctor_id.id}})" type='submit'>
+                                    {% else %}
+
+                                    {% if i.is_accepted_by_doctor %}
+                                    
+                                    <input class="btn btn-success delete_btn" id='{{i.id}}' value='verified'  type='submit'>
+                                    {% else  %}
+                                    
+                                    <input class="btn btn-danger delete_btn" id='{{i.id}}' value='Rejected'  type='submit'>
+                                    {% endif %}
+
+                                    {% endif %}  
+                                </td>
+
+                                <td>
+                                    
+                                    <!-- Button description  modal -->
+                                    {% if not  i.is_accepted_by_doctor and  not i.is_rejected_by_doctor  %}
+
+
+                                    <button type="button" class="btn btn-primary disabled" data-bs-toggle="modal" id='modal-description' data-bs-target="#exampleModal-{{forloop.counter}}">
+                                        Admit
+                                    </button>
+                                    {% elif i.is_accepted_by_doctor %}
+                                    {% if not i.Patient_id.is_admited %}
+                                    <button type="button" class="btn btn-primary " data-bs-toggle="modal" id='modal-description' data-bs-target="#exampleModal-{{forloop.counter}}">
+                                        Admitt
+                                    </button>
+                                    {% else %}
+                                    
+                                    <button type="button" class="btn btn-success ">
+                                        Admitted
+                                    </button>
+                                    
+                                    {% endif %} 
+
+                                    {% elif i.is_rejected_by_doctor %}
+
+
+                                    {% endif %}
+                                
+                                <!-- Modal  description-->
+                                
+                                <div class="modal fade" id="exampleModal-{{forloop.counter}}" tabindex="-1" aria-labelledby="exampleModalLabel-" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Doctor description about patient</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <label for="description">Description</label>
+                                            
+                                            <textarea class="form-control" placeholder="Describe your symptoms" name='patient_symptoms' id="floatingTextarea-{{forloop.counter}}"></textarea>
+                                        </div>
+                                        <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+
+                                        <input class="btn btn-primary delete_btn m-1" data-Id='{{forloop.counter}}' value='Admit' onclick="Approved_Appointment(this,{{i.id}},{{i.Patient_id.id}},{{i.Doctor_id.id}})"  type='button'>
+                                        </div>
+                                    </div>
+                                    </div>
+                                </div>
+                            </tr>
+                            {% endfor %}
+                            
+                            
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        </div>
+
+        <!-- Bar Chart -->
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Bar Chart</h6>
+            </div>
+            <div class="card-body">
+                <div class="chart-bar">
+                    <canvas id="myBarChart"></canvas>
+                </div>
+                <hr>
+                Styling for the bar chart can be found in the
+                <code>/js/demo/chart-bar-demo.js</code> file.
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Donut Chart -->
+    <div class="col-xl-4 col-lg-5">
+        <div class="card shadow mb-4">
+            <!-- Card Header - Dropdown -->
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Donut Chart</h6>
+            </div>
+            <!-- Card Body -->
+            <div class="card-body">
+                <div class="chart-pie pt-4">
+                    <canvas id="myPieChart"></canvas>
+                </div>
+                <hr>
+                Styling for the donut chart can be found in the
+                <code>/js/demo/chart-pie-demo.js</code> file.
+            </div>
+        </div>
+    </div>
+</div>
+
+</div>
+    {% endblock content %}
+
+
+    {% block js %} 
+    <script>
+        function fun1(){
+            setTimeout(
+                swal("Are you sure you want to do this?", {
+                    buttons: ["cancel", "Delete"],
+                  });
+
+                , 3000);
+
+            
+        }
+    </script>
+    {% endblock js %}
+   
+
+   

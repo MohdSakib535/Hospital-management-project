@@ -1,0 +1,180 @@
+{% extends 'dashboard/index.html' %}
+{% load static %}
+
+{% block css %}
+<style>
+    .img-profile{
+         width:50px;
+        height:50px; 
+        object-fit:cover;
+    } 
+</style> 
+{% endblock css %}
+
+
+
+
+
+{% block content %}
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Doctor Data</h1>
+    <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
+            class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
+</div>
+
+
+    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+
+        <!-- Area Chart -->
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">New Doctor</h6>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>patient name</th>
+                               
+                                <th>doctor name</th>
+                                <th>symptoms</th>
+                                <th>admit date</th>
+                                <th>release date</th>
+                                <th>doctor status</th>
+                                <th>charges</th>
+
+                                {% comment %} <th>hospital status</th> {% endcomment %}
+                                
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for i in admit_Data %}
+                            <tr>
+                                <td>{{forloop.counter}}</td>
+                                <td>{{i.patientId.patient_user.name}}</td>
+                               
+                                <td>{{i.assignedDoctor.doctor_user.name}}</td>
+                                <td>{{i.symptoms}}</td>
+                                <td>{{i.admitDate}}</td>
+                                <td>{{i.releaseDate}}</td>
+
+                                {% if i.releaseDate %}
+                                <td>
+                                    <span class="badge bg-info m-3 p-2  fs-6">discharged</span>
+                                   
+                                    {% comment %} <span class="btn btn-info disabled">discharged by doctor</span> {% endcomment %}
+                                    {% comment %} <input class="btn btn-primary m-1 h8" id='{{i.id}}' value='Accept' onclick="Approved_by_hospital(this,{{i.id}})" type='submit'> {% endcomment %}
+
+                                </td>
+                                
+                                <td>
+                                    {% if i.Staus_by_hospital %}
+                                    <button type="button" class="btn btn-success m-3">
+                                        Added
+                                     </button>
+                                     {% else %}
+                                     <button type="button" class="btn btn-primary m-3" data-bs-toggle="modal" data-bs-target="#exampleModal-{{forloop.counter}}">
+                                        Add 
+                                     </button>
+                                    {% endif %}
+
+                                    {% comment %} <button type="button" class="btn btn-primary m-3" data-bs-toggle="modal" data-bs-target="#exampleModal-{{forloop.counter}}">
+                                       Add 
+                                    </button> {% endcomment %}
+
+                                    <div class="modal fade" id="exampleModal-{{forloop.counter}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                          <div class="modal-content">
+                                            <div class="modal-header">
+                                              <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <div class="mt-2">
+                                                            <label for="room_charges">Room charges</label>
+                                                            <input type="text" class='form-control' id="room_charges-{{forloop.counter}}" name="room_charges" required>
+                                                        </div>
+                                                        <div>
+                                                            <label for="medicine_charges">medicine cost</label>
+                                                            <input type="text" class='form-control' id="medicine_charges-{{forloop.counter}}" name="medicine_charges" required>
+
+                                                        </div>
+                                                        <div>
+                                                            <label for="other_charges">Other cost</label>
+                                                            <input type="text" class='form-control' id="other_charges-{{forloop.counter}}" name="other_charges" required>
+
+                                                        </div>
+                                                            
+                                                    </div>
+                                                </div>
+                                                
+                                              
+                                            </div>
+                                            <div class="modal-footer">
+                                                {{i.patientId_id}}
+                                                {{i.assignedDoctor_id}}
+                                                {{i.id}}
+                                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+
+                                              <input class="btn btn-primary delete_btn m-1" data-Id='{{forloop.counter}}' value='save' onclick="Make_charges_data(this,{{i.id}},{{i.patientId.id}},{{i.Doctor_id.id}})"  type='submit'>
+                                              
+                                              {% comment %} <button type="button" class="btn btn-primary">Save changes</button> {% endcomment %}
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                </td>
+                                
+                                {% else %}
+                                <td>
+                                    {% comment %} <span class="btn btn-warning disabled">pending</span> {% endcomment %}
+                                    <span class="badge bg-warning m-3 p-2 fs-6">pending</span>
+                                   
+                                </td>
+                                <td>
+                                    
+                                    <span class="badge bg-warning m-3 p-2 fs-6">pending</span>
+
+                                </td>
+                                {% endif %}
+
+                                {% comment %} <td>
+                                    <input class="btn btn-primary m-1 h8" id='{{i.id}}' value='Accept' onclick="Approved_by_hospital(this,{{i.id}})" type='submit'>
+                                    
+                                </td>   {% endcomment %}
+                                
+                            </tr>
+                            {% endfor %}
+                            
+                            
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>   
+    
+</div>
+
+</div>
+    {% endblock content %}
+    
+    {% block js %} 
+      <script>
+        
+
+        
+        
+        
+        
+    </script> 
+  
+
+    {% endblock js %}
+
+   

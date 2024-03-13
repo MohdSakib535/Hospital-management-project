@@ -1,0 +1,149 @@
+{% extends 'dashboard/index.html' %}
+{% load static %}
+
+{% block css %}
+<style>
+    .bi-bookmark-fill{
+        position:relative;
+        bottom:20px;
+        z-index:1;
+        font-size:20px !important;
+       
+    }
+    .bi-hand-thumbs-up-fill{
+        position:relative;
+        top:20px;
+        left:5px;
+    }
+    .card-data{
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        transition: transform .2s
+
+    }
+      .card-data:hover{
+        box-shadow: -1px 8px 15px 0 rgb(90 50 224 / 55%), 5px 1px 20px 0 rgb(18 211 143 / 31%);
+        {% comment %} box-shadow: -1px 8px 15px 0 rgb(0 0 0 / 20%), 5px 1px 20px 0 rgb(0 0 0 / 19%); {% endcomment %}
+    }
+     
+     
+</style> 
+{% endblock css %}
+
+
+
+
+
+{% block content %}
+{% load customfilter %}
+
+<div class="container ">
+  
+    {% for doctor_data,like_count,patient_data,fav in doctor_details %}
+    <div class="row card-data m-5">
+        <div class="col-md-1 ">
+
+            {% if fav %}
+                <i class="fas fa fa-bookmark ml-2  mb-3"  value='bookmark' onclick="favourite_doctor_data(this,{{patient_profile_id}},{{doctor_data.id}})"  style='font-size:40px;position:relative;bottom:15px; color:tomato'></i>
+            {% else %}
+                <i class="fas fa fa-bookmark ml-2  mb-3"  value='bookmark' onclick="favourite_doctor_data(this,{{patient_profile_id}},{{doctor_data.id}})"  style='font-size:40px;position:relative;bottom:15px;'></i>
+            {% endif %}
+            
+            <div class='d-flex justify-content-center '>
+              {% if patient_data %}
+              <i class="fas fa fa-thumbs-up ml-2 thumb-up"  value='like' onclick="vote_button(this,{{patient_profile_id}},{{doctor_data.id}})" style='font-size:50px;color:green;'></i>
+              {% else %}
+              <i class="fas fa fa-thumbs-up ml-2 thumb-up"  value='like' onclick="vote_button(this,{{patient_profile_id}},{{doctor_data.id}})" style='font-size:50px;'></i>
+              {% endif %}
+            </div>
+        </div> 
+        
+        <div class="col-md-3 "> 
+          <div class='d-flex justify-content-center' >
+              <img src="{{doctor_data.img.url}}" class="card-img-top mt-3" alt="..." style='width:200px; border-radius:10px'>
+          </div> 
+        </div> 
+
+        <div class="col-md-5 d-flex justify-content-center ">
+            <div>
+                <div><h3 style='color:#595555;font-weight:600'>Dr.{{doctor_data.doctor_user.name}}</h3></div>
+                <div>{{doctor_data.Qualification}}</div>
+                <div>{{doctor_data.Speciality}}</div>
+                <div>Years of Experience-{{doctor_data.experience}}</div>
+                <div>{{doctor_data.languages}}</div>
+                <div>{{doctor_data.state}},{{doctor_data.city}}</div>
+                <div class='like-btn'>Like-<span>{{like_count}}</span></div>
+            </div>
+        </div>
+    
+        <div class="col-md-3  " >
+            <div class='d-flex justify-content-center mt-3'>
+              <div class="fees_data">
+                <span class="" style='font-size:15px; font-weight:500 '><del>₹ {{doctor_data.fees}}</del><small style='color:#87CEEB'>&emsp;OFF 20%</small></span><br>
+                <span class="" style='font-size:20px; font-weight:500 '>₹ {{doctor_data.fees|Discount}}</span>
+              </div>
+              </div>
+            <div class='d-flex justify-content-center mt-5'>
+
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal-{{doctor_data.id}}">
+                    Appointment
+                </button>
+
+                <div class="modal fade" id="exampleModal-{{doctor_data.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title" id="exampleModalLabel">Appointment Date </h5>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form action="{% url 'search_doctor' %}" method="POST">
+                                {% csrf_token %}
+                                <div class="row">
+                                    <input type="hidden" name='doctor_id' value="{{doctor_data.id}}">
+
+                                    <div class=" ">
+                                        <label for="floatingTextarea">Description</label>
+                                        <textarea class="form-control" placeholder="Describe your symptoms" name='patient_symptoms' id="floatingTextarea"></textarea>
+                                    </div><br><br>
+
+                                    <div class="mt-2">
+                                    <label for="issued_date">Date</label>
+                                    <input type="datetime-local" class='form-control' id="issued_date" name="Date_Data4" required>
+                                    </div>
+                                    
+                                    
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-primary">Save changes</button>
+                                  </div>
+
+                            </form>
+                           
+                        </div>
+                        
+                      </div>
+                    </div>
+                </div>
+
+
+                
+               
+
+            </div>
+            
+        </div> 
+    </div>
+    {% endfor %}
+</div><br><br> 
+
+
+    {% endblock content %}
+    
+    {% block js %} 
+    
+  
+
+    {% endblock js %}
+
+   

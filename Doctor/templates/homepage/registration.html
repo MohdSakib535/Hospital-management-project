@@ -1,0 +1,354 @@
+{% extends 'homepage/base.html' %}
+{% load static %}
+{% block css %}
+<style>
+    {% comment %} .patient-registration-form{
+        display:none;
+    } {% endcomment %}
+    .doctor-registration-form{
+        display:none
+    }
+    body {
+        margin: 0;
+        padding: 0;
+        {% comment %} background-color:  #ef629f; {% endcomment %}
+        background-color: #FBAB7E;
+        background-image: linear-gradient(62deg, #FBAB7E 0%, #F7CE68 100%);
+
+        height: 100vh;
+      }
+    .patient-registration-form{
+        background-color: white;
+    }
+    .doctor-registration-form{
+        background-color: white;
+
+    }
+
+
+</style>
+{% endblock css %}
+
+
+{% block content %}
+
+{% if messages %}
+{% for message in messages %}
+
+<input type="hidden" value="{{message}}" id="message" >
+
+<script>
+    var message = document.getElementById('message').value
+    Snackbar.show({ text: message , pos: 'bottom-right', actionText: "Close", alertScreenReader: true, duration: 5000 });
+</script>
+
+{% endfor %}
+{% endif %}
+
+
+
+<div class="container d-flex justify-content-center">
+   
+    <div class="col-lg-6 col-md-6 col-sm-12 p-3">
+        <div class="heading-registration m-3">
+            <h1 style='text-align:center;'>Get Registered As</h1>
+            <hr class="dropdown-divider">
+            <div class="user-type d-flex justify-content-around">
+                <button type="button" class="btn btn-outline-primary pt1" data='patient' id='patient_btn'>Patient</button>
+                <button type="button" class="btn btn-outline-success" data='doctor' id='doctor_btn'>Doctor</button>
+            </div>
+        </div>
+        
+        <!--patient form-->
+        <form action="{% url 'registration' %}" class='patient-registration-form p-5' method='POST' enctype='multipart/form-data' >
+            {% csrf_token %}
+            <input type="hidden" name='data' value='patient' >
+            <div class="form-floating mb-3">
+                <input type="text" class="form-control" id="patient_name" placeholder="Username" name='name'>
+                <label for="patient_name">Name</label>
+            </div>
+            <div class="row g-2">
+                <div class="col-md">
+                    <div class="form-floating mb-3">
+                        <input type="email" class="form-control" id="patient_email" name='email' placeholder="">
+                        <label for="patient_email">Email address</label>
+                    </div>
+                </div>
+                {% comment %} <div class="col-md">
+                    <div class="form-floating mb-3">
+                        <input type="number" class="form-control" id="patient_age" name='age'placeholder="">
+                        <label for="patient_age">Age</label>
+                    </div>
+                </div>  {% endcomment %}
+                <div class="col-md">
+                    <div class="form-floating mb-3">
+                        <input type="number" class="form-control" id="patient_age" name='age' placeholder="">
+                        <label for="patient_age">Age</label>
+                    </div>
+                </div>
+            </div>
+
+             <div class="row g-2">
+                <div class="col-md">
+                    <div class="form-floating mb-3">
+                        <select class="form-select" id="patient_SelectGrid" aria-label="Floating label select example" name='gender-select'>
+                            <option selected></option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                        </select>
+                        <label for="patient_SelectGrid"> Gender</label>
+                    </div>
+                </div>
+                <div class="col-md">
+                    <div class="form-floating mb-3">
+                        <input type="tel" class="form-control" id="patient_Mobile" name='mobile' placeholder="00-00-00-00-00">
+                        <label for="patient_Mobile">Mobile</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row g-2">
+                <div class="col-md">
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="patient_location" name="location" placeholder="">
+                        <label for="patient_location">Location</label>
+                    </div>
+                </div>
+                
+            </div> 
+            
+
+            <div class="col-md mb-3">
+                <div class="input-group mb-3">
+                    <input type="file" class="form-control" id="patient_img" name='file-img' aria-describedby="inputGroupFileAddon04" aria-label="Upload">
+                </div>
+                
+            </div>
+
+            <div class="row g-2">
+                <div class="col-md">
+                  
+                    <div class="form-floating mb-3">
+                        <input type="password" class="form-control" id="patient_password" name='password' placeholder="">
+                        <label for="patient_password">password</label>
+                        
+                    </div>
+                </div>
+                <div class="col-md mb-3">
+                    <div class="form-floating mb-3">
+                        <input type="password" class="form-control" id="patient_repassword" name='repassword' placeholder="">
+                        <label for="patient_repassword">confirm password</label>
+                        <small class='m-1'><input type="checkbox" onclick="myFunction()">Show Password</small>
+                        
+                    </div>
+                    
+                </div>
+            </div>  
+
+            <div class="form-floating mb-3 " style='text-align:center;'>
+                <button type="submit" class="btn btn-primary ">Registered as Patient</button>  
+            </div>
+        </form>
+
+        <!--doctor form-->
+
+        <form action="{% url 'registration' %}" class='doctor-registration-form p-5' method='POST' enctype='multipart/form-data'>
+            {% csrf_token %}
+            <input type="hidden" name='data' value='doctor'>
+             <div class="form-floating mb-3">
+                <input type="text" class="form-control" id="doctor_name" name='name' placeholder="Username">
+                <label for="floatingInput">Name</label>
+            </div>
+            <div class="row g-2">
+                <div class="col-md">
+                    <div class="form-floating mb-3">
+                        <input type="email" class="form-control" id="doctor_email" name='email'placeholder="name@example.com">
+                        <label for="doctor_email">Email address</label>
+                    </div>
+                </div>
+                <div class="col-md">
+                    <div class="form-floating mb-3">
+                        <input type="number" class="form-control" id="doctor_age" name='age' placeholder="">
+                        <label for="doctor_age">Age</label>
+                    </div> 
+                </div>
+            </div>
+
+            <div class="row g-2">
+                <div class="col-md">
+                    <div class="form-floating mb-3">
+                        <select class="form-select" id="doctor_select" aria-label="Floating label select example" name='gender-select'>
+                            <option selected></option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                        </select>
+                        <label for="doctor_select"> Gender</label>
+                    </div>
+                </div>
+                <div class="col-md">
+                    <div class="form-floating mb-3 ">
+                        <select class="form-select" id="doctor_SelectGrid" name='speciality' aria-label="Floating label select example">
+                            <option selected></option>
+                            <option value='' disabled selected hidden >Specialist</option>
+                            <option value="Cardiologist">Cardiologist</option>
+                            <option value="Audiologists">Audiologists</option>
+                            <option value="Cardiothoracic Surgeon">Cardiothoracic Surgeon</option>
+                            <option value="Dentist">Dentist </option>
+                            <option value="Endocrinologist">Endocrinologist </option>
+                            <option value="ENT Specialists">ENT Specialists </option>
+                            <option value="Gynecologists">Gynecologists </option>
+                            <option value="Neurologists">Neurologists </option>
+                            <option value="Oncologists">Oncologists </option>
+                            <option value="Orthopedic Surgeon">Orthopedic Surgeon </option>
+                            <option value="Pediatrician">Pediatrician </option>
+                            <option value="Psychiatrists">Psychiatrists </option>
+                            <option value="Pulmonologists">Pulmonologists </option>
+                            <option value="Radiologist">Radiologist </option>
+                            <option value="Veterinarian">Veterinarian </option>
+                        </select>
+                        <label for="doctor_SelectGrid">Speciality</label>
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div class="row g-2">
+                <div class="col-md">
+                    <div class="form-floating mb-3">
+                        <input type="tel" class="form-control" id="doctor_mobile" placeholder="00-00-00-00-00" name='mobile'>
+                        <label for="doctor_mobile">Mobile</label>
+                    </div>
+                </div>
+                <div class="col-md mb-3">
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="doctor_location"  name="experience" placeholder="">
+                        <label for="doctor_location">Experience</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row g-2">
+                <div class="col-md">
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="patient_location" name="state" placeholder="">
+                        <label for="patient_location">State</label>
+                    </div>
+                </div>
+                <div class="col-md">
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="patient_location" name="city" placeholder="">
+                        <label for="patient_location">city</label>
+                    </div>
+                </div>
+                
+            </div> 
+
+            <div class="form-floating mb-3">
+                <textarea class="form-control" placeholder="Leave a comment here" id="doctor_description" style="height: 100px" name='description'></textarea>
+                <label for="doctor_description">Description</label>
+            </div>
+
+
+           
+                <div class="col-md">
+                    <div class="input-group mb-3">
+                        <input type="file" class="form-control" id="doctor_img"  required name='file-img' aria-describedby="inputGroupFileAddon04" aria-label="Upload">
+                    </div>
+                </div>
+                
+                
+            
+
+            
+
+
+            <div class="row g-2">
+                <div class="col-md">
+                    <div class="form-floating mb-3">
+                        <input type="password" class="form-control" id="doctor_password"  name='password'  placeholder="">
+                        <label for="doctor_password">password</label>
+                    </div>
+                </div>
+                <div class="col-md mb-3">
+                    <div class="form-floating mb-3">
+                        <input type="password" class="form-control" id="doctor_repassword" name='repassword' placeholder="">
+                        <label for="doctor_repassword">confirm password</label>
+                        <small class='m-1'><input type="checkbox" onclick="myFunction2()">Show Password</small>
+                    </div>  
+                </div>
+            </div> 
+            <div class="form-floating mb-3 " style='text-align:center;'>
+                <button type="submit" class="btn btn-success ">Registered as Doctor</button>   
+            </div>
+        </form>
+    </div> 
+</div><br><br>
+
+    {% endblock content %}
+
+
+{% block js %} 
+<script>
+
+    const patient_Btn=document.getElementById('patient_btn');
+    const doctor_Btn=document.getElementById('doctor_btn');
+
+    patient_Btn.addEventListener('click',showPatient)
+    doctor_Btn.addEventListener('click',showDoctor)
+    
+    function showPatient(e){
+        //console.log(e)
+        let patient_form=document.querySelector('.patient-registration-form')
+        let doctor_form=document.querySelector('.doctor-registration-form')
+        patient_form.style.display='block'
+        doctor_form.style.display='none'
+
+  
+
+        console.log(e.target.getAttribute('data'))
+    }
+    function showDoctor(e){
+        let doctor_form=document.querySelector('.doctor-registration-form')
+        let patient_form=document.querySelector('.patient-registration-form')
+        doctor_form.style.display='block'
+
+        patient_form.style.display='none'
+        
+        console.log(e.target.getAttribute('data'))
+    }
+
+    function myFunction() {
+        var x = document.getElementById("patient_password");
+        
+        var y = document.getElementById("patient_repassword");
+       
+        if (x.type === "password" && y.type==="password"){
+          x.type = "text";
+          y.type = "text";
+        } else {
+          x.type = "password";
+          y.type = "password";
+        }
+      }
+      function myFunction2() {
+  
+        var x1 = document.getElementById("doctor_password");
+   
+        var y1 = document.getElementById("doctor_repassword");
+        if (x1.type==='password' && y1.type==='password') {
+       
+          x1.type = "text";
+          y1.type = "text";
+        } else {
+          
+          x1.type = "password";
+          y1.type = "password";
+        }
+      }
+
+</script>
+
+
+{% endblock js %}
+
+

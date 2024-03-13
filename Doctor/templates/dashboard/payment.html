@@ -1,0 +1,101 @@
+{% extends 'dashboard/index.html' %}
+{% load static %}
+
+{% block css %} 
+<style>
+    .img-profile{
+        width:50px;
+        height:50px;
+        object-fit:cover;
+    } 
+</style>
+{% endblock css %}
+
+
+
+
+
+{% block content %}
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">payment</h1>
+    <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
+            class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
+</div>
+
+
+    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+
+        <!-- Area Chart -->
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Doctor Datas</h6>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>Doctor Name</th>
+                                <th>action</th>
+                                <th>payment status</th>
+                                
+                                
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for i,j in paymet_data %}
+                           
+                            <tr>
+                                <td>{{forloop.counter}}</td>
+                                
+                                <td>{{i.assignedDoctor.doctor_user.name}}</td>
+                              
+                                <td>
+                                    {% if not j.is_paid %}
+                                    
+                                    <a class="btn btn-outline-info" href="{% url 'invoice_data' id=i.id %}" role="button">Invoice</a>
+
+                                    {% else %}
+                                    <a class="btn btn-secondary" href="{% url 'invoice_data_download' id=i.id %}" download="Recipt-data.pdf"   role="button"><i class="fas fa-download p-1" aria-hidden="true"></i></a>
+
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    
+                                    {% if not j.is_paid %}
+                                     <a class="btn btn-warning" href="#" role="button">Pending</a>
+                                     {% else %}
+                                     <a class="btn btn-success" href="#" role="button">Paid</a>
+                                     {% endif %}
+
+                                </td>
+                            </tr>
+                            {% endfor %}
+                            
+                            
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        </div>
+
+        
+
+    </div>
+
+   
+   
+</div>
+
+</div>
+    {% endblock content %}
+
+    {% block js %} 
+
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    {% endblock js %}
+   
+
+   

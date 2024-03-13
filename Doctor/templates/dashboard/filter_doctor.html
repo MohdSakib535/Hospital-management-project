@@ -1,0 +1,374 @@
+{% extends 'dashboard/index.html' %}
+{% load static %}
+
+
+{% block css %}
+<style>
+    .bi-bookmark-fill{
+        position:relative;
+        bottom:20px;
+        z-index:1;
+        font-size:20px !important;
+       
+    }
+    .bi-hand-thumbs-up-fill{
+        position:relative;
+        top:20px;
+        left:5px;
+    }
+    .card-data{
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        transition: transform .2s
+
+    }
+      .card-data:hover{
+        box-shadow: -1px 8px 15px 0 rgb(90 50 224 / 55%), 5px 1px 20px 0 rgb(18 211 143 / 31%);
+        {% comment %} box-shadow: -1px 8px 15px 0 rgb(0 0 0 / 20%), 5px 1px 20px 0 rgb(0 0 0 / 19%); {% endcomment %}
+    }
+    .main_container{
+      display:none;
+    } 
+     
+     
+</style> 
+{% endblock css %}
+
+
+
+
+
+{% block content %}
+{% load customfilter %}
+
+<div class="container main_container">
+  
+  <div class="container d-flex  justify-content-around   ">
+    <!-- Button trigger modal for filter -->
+    <button type="button sm-m-2" class="btn btn-primary " data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+        filter
+    </button> 
+
+    <!--search bar-->
+    <form class=" navbar-search " action="{% url 'search_doctor_name' %}" method='POST'>
+       {% csrf_token %} 
+       <div class="input-group autocomplete"  >
+        <input type="text" class="form-control  border-0 small border border-primary" id='tags' onkeyup='NameCome()' name='search' placeholder="Search name only..."
+            aria-label="Search" aria-describedby="basic-addon2" style='background-color:#DCDCDC'>
+        <div class="input-group-append">
+            <button class="btn btn-primary" type="submit">
+                <i class="fas fa-search fa-sm"></i>
+            </button>
+        </div> 
+      </div>
+    </form>
+
+   
+
+    {% comment %} <button type="button " class="btn btn-primary  " data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+      sort
+    </button>   {% endcomment %}
+
+    </div>
+    
+  
+  <!-- Modal filter-->
+  <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <form action="{% url 'filter_doctor_query' %}" method="GET">
+          
+            {% comment %} {% csrf_token %} {% endcomment %}
+            <div class="row">
+              <div class="col-md-4">
+               
+                  
+                  <select class="form-select" aria-label="Default select example" name='select-specialist'>
+                  
+                  <option value='' disabled selected hidden >Specialist</option>
+                  <option value="Cardiologist" >Cardiologist</option>
+                  <option value="Audiologists">Audiologists</option>
+                  <option value="Cardiothoracic Surgeon">Cardiothoracic Surgeon</option>
+                  <option value="Dentist">Dentist </option>
+                  <option value="Endocrinologist">Endocrinologist </option>
+                  <option value="ENT Specialists">ENT Specialists </option>
+                  <option value="Gynecologists">Gynecologists </option>
+                  <option value="Neurologists">Neurologists </option>
+                  <option value="Oncologists">Oncologists </option>
+                  <option value="Orthopedic Surgeon">Orthopedic Surgeon </option>
+                  <option value="Pediatrician">Pediatrician </option>
+                  <option value="Psychiatrists">Psychiatrists </option>
+                  <option value="Pulmonologists">Pulmonologists </option>
+                  <option value="Radiologist">Radiologist </option>
+                  <option value="Veterinarian">Veterinarian </option> 
+                  
+                </select>
+              </div>
+              <div class="col-md-4">
+                <select class="form-select" aria-label="Default select example" name='select-gender'>
+                  <option value="" disabled selected hidden>Gender</option>
+                  <option value="Male">Male</option>    
+                  <option value="Female">Female</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+               <div class="col-md-4">
+                <select class="form-select" aria-label="Default select example"name='select-state'>
+                  <option value="" disabled selected hidden>State</option>
+                  <option value="Delhi">Delhi</option>
+                  <option value="Mumbai">Mumbai</option>
+                  <option value="Bangalore">Bangalore</option>
+                  <option value="Goa">Goa</option>
+                </select>
+              </div>
+              <div class="col-md-4 mt-3">
+                <select class="form-select" aria-label="Default select example" name='select-experience'>
+                  <option  value="" disabled selected hidden>Experience</option>
+                  <option value="young">below 20</option>
+                  <option value="old">above 20</option>
+                  
+                </select>
+              </div> 
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary">submit</button>
+            </div>
+           
+            
+          </form>
+         
+        </div>
+       
+      </div>
+    </div>
+  </div>
+
+  {% for doctor_data,like_count,patient_data,fav in doctor_details %}
+  
+    <div class="row card-data  m-5" id='card_without_placeholder'>
+        <div class="col-md-1 ">
+
+          {% if fav %}
+
+          <i class="fas fa fa-bookmark ml-2  mb-3"  value='bookmark' onclick="favourite_doctor_data(this,{{patient_profile_id}},{{doctor_data.id}})"  style='font-size:40px;position:relative;bottom:15px; color:tomato'></i>
+          {% else %}
+          <i class="fas fa fa-bookmark ml-2  mb-3"  value='bookmark' onclick="favourite_doctor_data(this,{{patient_profile_id}},{{doctor_data.id}})"  style='font-size:40px;position:relative;bottom:15px;'></i>
+          {% endif %}
+
+            
+            <div class='d-flex justify-content-center '>
+              {% comment %} {% if patient_data %}
+              <i class="fas fa fa-thumbs-up ml-2 thumb-up"  value='like' onclick="vote_button(this,{{patient_profile_id}},{{doctor_data.id}});" style='font-size:50px;color:green;'></i>
+              
+              {% else %}
+              <i class="fas fa fa-thumbs-up ml-2 thumb-up"  value='like' onclick="vote_button(this,{{patient_profile_id}},{{doctor_data.id}})" style='font-size:50px;'></i>
+              {% endif %} {% endcomment %}
+              {% comment %} {% endif %}  {% endcomment %}
+
+              {% if patient_data %}
+              <i class="fas fa fa-thumbs-up ml-2 thumb-up"  value='like' onclick="vote_button(this,{{patient_profile_id}},{{doctor_data.id}});" style='font-size:50px;color:green;'></i>
+
+              <i class="fas fa fa-thumbs-up ml-2 thumb-up"  value='dislike' onclick="vote_button2(this,{{patient_profile_id}},{{doctor_data.id}});" style='font-size:50px;color:green;display:none'></i>
+              
+              {% else %}
+              <i class="fas fa fa-thumbs-up ml-2 thumb-up"  value='like' onclick="vote_button(this,{{patient_profile_id}},{{doctor_data.id}})" style='font-size:50px;'></i>
+              <i class="fas fa fa-thumbs-up ml-2 thumb-up"  value='dislike' onclick="vote_button2(this,{{patient_profile_id}},{{doctor_data.id}})" style='font-size:50px;display:none'></i>
+              {% endif %} 
+              
+              
+            </div> 
+        </div> 
+        
+        <div class="col-md-3 ">
+           
+            <div class='d-flex justify-content-center' >
+                <img src="{{doctor_data.img.url}}" class="card-img-top mt-3" alt="..." style='width:200px; border-radius:10px'>
+            </div>
+           
+        </div>  
+        <div class="col-md-5 d-flex justify-content-center ">
+            <div>
+               
+                <div><h3 style='color:#595555;font-weight:600'>Dr.{{doctor_data.doctor_user.name}}</h3></div>
+                <div>{{doctor_data.Qualification}}</div>
+                <div>{{doctor_data.Speciality}}</div>
+                <div>Years of Experience-{{doctor_data.experience}}</div>
+                <div>{{doctor_data.languages}}</div>
+                <div>{{doctor_data.state}},{{doctor_data.city}}</div>
+                <div class='like-btn'>Like-<span>{{like_count}}</span></div>
+            </div>
+ 
+        </div>
+    
+        <div class="col-md-3  " >
+          <div class='d-flex justify-content-center mt-3'>
+           
+            <div class="fees_data">
+              <span class="" style='font-size:15px; font-weight:500 '><del>₹ {{doctor_data.fees|Discount}}</del><small style='color:#87CEEB'>&emsp;OFF 20%</small></span><br>
+              <span class="" style='font-size:20px; color:#595555; font-weight:500 '>₹ {{doctor_data.fees}} <small>(per visit)</small></span>
+            </div>
+          </div>
+
+
+            <div class='d-flex justify-content-center mt-5'>
+
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal-{{doctor_data.id}}">
+                    Appointment
+                </button>
+
+                <div class="modal fade" id="exampleModal-{{doctor_data.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title" id="exampleModalLabel">Appointment Date </h5>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form action="{% url 'search_doctor' %}" method="POST">
+                                {% csrf_token %}
+                                <div class="row">
+                                    <input type="hidden" name='doctor_id' value='{{doctor_data.id}}'>
+
+                                    <div class=" ">
+                                        <label for="floatingTextarea">Description</label>
+                                        <textarea class="form-control" placeholder="Describe your symptoms" name='patient_symptoms' id="floatingTextarea"></textarea>
+                                    </div><br><br>
+
+                                    <div class="mt-2">
+                                    <label for="issued_date">Date</label>
+                                    <input type="datetime-local" class='form-control' id="issued_date" name="Date_Data4" required>
+                                    </div>
+                                    
+                                    
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-primary">Save changes</button>
+                                </div>
+                            </form>   
+                        </div> 
+                      </div>
+                    </div>
+                </div>
+            </div> 
+        </div> 
+    </div>
+    {% endfor %}
+</div>
+
+<!--    palceholder card part    -->
+<div class="container placeholder_container">
+  <div class="container d-flex  justify-content-around ml-5 placeholder-glow" style="position:relative;left:70px;">
+    <div class='w-25 '><span class="placeholder col-3 p-3 "></span></div>
+    <div class='w-50 '><span class="placeholder col-4 p-3 "></span></div>
+
+
+  </div>
+
+    {% for doctor_data,like_count,patient_data,fav in doctor_details %}
+  
+    <div class="row card-data card3 m-5  " id="card_placeholder" aria-hidden="true">
+        <div class="col-md-1 placeholder-glow">
+
+          <span class="placeholder col-7"  style='border-radius:10%; position:relative;bottom:20px;; font-size:40px;'></span>
+            
+            <div class='d-flex justify-content-center '>
+              <span class="placeholder col-7"  style='border-radius:50%; font-size:40px;'></span>
+            </div> 
+        </div> 
+        
+        <div class="col-md-3 ">
+           
+            <div class='d-flex justify-content-center  placeholder-glow' >
+              <span class="placeholder col-7 p-5 mt-4 rounded"></span>
+            </div>
+           
+        </div>  
+        <div class="col-md-5 d-flex justify-content-center ">
+            <div class="w-50 placeholder-glow">
+                <div><span class="placeholder-glow col-7"></span></div>
+                <div><span class="placeholder col-4"></span></div>
+                <div><span class="placeholder col-4"></span></div>
+                <div><span class="placeholder col-4"></span></div>
+                <div><span class="placeholder col-8"></span></div>
+                <div class='like-btn'><span class="placeholder col-4"></span></div> 
+
+            </div>
+ 
+        </div>
+    
+        <div class="col-md-3  " >
+          <div class='ml-5 mt-3'>
+            <div class="fees_data placeholder-glow" >
+              <div><span class="placeholder col-7"></span></div>
+              <div><span class="placeholder col-7"></span></div>
+            </div>
+          </div>
+
+
+            <div class='d-flex justify-content-center mr-3 mt-4 placeholder-glow'>
+
+              <a href="#" tabindex="-1" class="btn btn-primary disabled placeholder col-6"></a>
+            </div>
+            
+        </div> 
+    </div>
+    {% endfor %} 
+
+
+ 
+
+
+</div><br><br> 
+
+
+    {% endblock content %}
+    
+    {% block js %} 
+    <script>
+      function NameCome(){
+        var data=axios.get('/doctor-response-data/').then(res=>{
+            // console.log(res);
+            var name_data=res.data.data
+            var d9=res.data.status
+            console.log(name_data);
+            console.log(d9);
+            $("#tags").autocomplete({
+                minLength: 2,
+                delay: 100,
+                source: name_data
+            });
+    
+           
+        })
+    }
+
+    var main_data_container = document.querySelector('.main_container ')
+
+    
+    var placeholder_container_data = document.querySelector('.placeholder_container ')
+
+    
+    window.addEventListener('load',fun1)
+    function fun1(){
+        var d2=setTimeout(myfun8,1)
+        function myfun8(){
+            placeholder_container_data.style.display='none'
+            main_data_container.style.display='block'
+         
+        }
+    } 
+    
+
+    </script>
+   
+  
+
+    {% endblock js %}
+
+   

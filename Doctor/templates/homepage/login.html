@@ -1,0 +1,83 @@
+{% extends 'homepage/base.html' %}
+{% load static %}
+{% block css %}
+<style>
+     body {
+        margin: 0;
+        padding: 0;
+        {% comment %} background-color: #17a2b8; {% endcomment %}
+        background-color: #8BC6EC;
+        background-image: linear-gradient(135deg, #8BC6EC 0%, #9599E2 100%);
+
+        height: 100vh;
+      }
+      .form_container{
+        background-color:white;
+      }
+      .snackbar-container.bottom-right {
+        background-color: #006767!important; 
+       
+        border-radius: 10px;
+    }
+
+    .snackbar-container.bottom-right p {
+        width: 100% !important;
+        text-align: center !important;
+    }
+
+
+</style>
+{% endblock css %}
+
+
+{% block content %}
+
+{% if messages %}
+{% for message in messages %}
+
+<input type="hidden" value="{{message}}" id="message" >
+
+<script>
+    var message = document.getElementById('message').value
+    Snackbar.show({ text: message , pos: 'bottom-right', actionText: "Close", alertScreenReader: true, duration: 5000 });
+</script>
+
+{% endfor %}
+{% endif %}
+<div class="container d-flex justify-content-center ">
+    <div class="col-lg-4 col-md-4 col-sm-12 col-12 ">
+        <div class="form_container border border-primary mt-5">
+            <div class="d-flex justify-content-center">
+                <h3>Login</h3>
+            </div>
+            
+            <form action="#" method="POST" class="form_section p-5">
+                {% csrf_token %}
+                <div class="form-floating mb-3">
+                    <input type="email" class="form-control" name='email' id="patient_login_email" placeholder="name@example.com">
+                    <label for="patient_login_email">Email address</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                    <input type="password" class="form-control"  name='password' id="patient_login_email" placeholder="Password">
+                    <label for="patient_login_email">Password</label>
+                    </div>
+                    <div id="emailHelp" class="form-text " style='position:relative;left:220px;bottom:18px;'>
+                        <a class="" href="{% url 'forget_password' %}" role="button">forget password</a>
+                    </div>
+                    <div class="form-floating mb-3 d-flex justify-content-between">
+                    <button type="submit" class="btn btn-success ">Login </button> 
+                    <a class="btn btn-outline-info" href="{% url 'registration' %}" role="button">Registered</a>
+                    </div>  
+                    
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+{% endblock content %}
+

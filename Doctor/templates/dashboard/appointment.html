@@ -1,0 +1,175 @@
+{% extends 'dashboard/index.html' %}
+{% load static %}
+
+{% block css %} 
+<style>
+    .img-profile{
+        width:50px;
+        height:50px;
+        object-fit:cover;
+    } 
+    .swal-button--confirm{
+         background-color: #f05884 !important;
+    }
+</style>
+{% endblock css %}
+
+
+
+
+
+{% block content %}
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">patient Appointment Data</h1>
+    <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
+            class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
+</div>
+
+
+    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+
+        <!-- Area Chart -->
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">List</h6>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>Img</th>
+                                <th>Dr. Name</th>
+                                <th>age</th>
+                                <th>speciality</th>
+                                <th>fees</th>
+                                <th>Appointment Date</th>
+                                <th>Action</th>
+                                <th>doctor Status</th>
+
+                                
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for i in appointment_data %}
+                            <tr>
+                                <td>{{forloop.counter}}</td>
+                                <td>
+                                    <img class="img-profile rounded-circle "
+                                    src="{{i.Doctor_id.img.url}}" alt='error'>
+                                </td>
+                                <td>{{i.Doctor_id.doctor_user.name}}</td>
+                                <td>{{i.Doctor_id.age}}</td>
+                                <td>{{i.Doctor_id.Speciality}}</td>
+                                <td>{{i.Doctor_id.fees}}</td>
+                                <td>{{i.appointmentDate}}</td>
+                                <td>
+
+                
+                                    <input class="btn btn-primary delete_btn" id='{{i.id}}' value='Delete' onclick="Delete_appointment_data(this,{{i.id}})" type='submit'>
+
+
+                                    {% if not i.is_rejected_by_doctor and not i.is_accepted_by_doctor  %}
+                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal1-{{i.id}}">
+                                        schedule
+                                    </button>
+                                    {% endif %}
+
+ 
+                                     <div class="modal fade" id="exampleModal1-{{i.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                         <div class="modal-dialog">
+                                           <div class="modal-content">
+                                             <div class="modal-header">
+                                               <h5 class="modal-title" id="exampleModalLabel">Schedule Appointment </h5>
+                                               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                             </div>
+                                             <div class="modal-body">
+                                                <form action="{% url 'appointment_data' %}" method="POST">
+                                                    {% csrf_token %}
+                                                    <div class="row">
+                                                        
+                                                        {% comment %} <input type="hidden" id='datetime_value' name='datetime' value='{{i.appointmentDate}}'> {% endcomment %}
+                                                        <input type="hidden" name='appointment_id' value='{{i.id}}'>
+                                                        <div class="mt-2">
+                                                        <label for="issued_date">Date</label>
+                                                        <input type="datetime-local" class='form-control' id="issued_date" name="Date_Data"   required>
+                                                        </div>
+                                                        
+                                                        
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                        <button type="submit" class="btn btn-primary">Save changes</button>
+                                                      </div>
+                    
+                                                </form>
+                                                
+                                             </div>
+                                            
+                                           </div>
+                                         </div>
+                                     </div>
+                                </td>
+                                <td>
+                                    {% if i.is_accepted_by_doctor %}
+                                    <button type="button" class="btn btn-info ">Accepted</button>
+                                 
+                                    {% elif i.is_rejected_by_doctor %}
+                                     <button type="button" class="btn btn-warning ">reject</button> 
+
+                                    {% else %}
+                                    
+                                    <button type="button" class="btn btn-secondary" data-bs-toggle="tooltip" data-bs-placement="top" title="pending more than 2 week delete it ">
+                                        pending
+                                      </button>
+                                    
+                                    {% endif %}
+
+                                </td>
+                            </tr>
+                            {% endfor %}
+                            
+                            
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        </div>
+        <!-- Bar Chart -->
+    </div>
+
+    <!-- Donut Chart -->
+    <div class="col-xl-4 col-lg-5">
+        <div class="card shadow mb-4">
+            <!-- Card Header - Dropdown -->
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Donut Chart</h6>
+            </div>
+            <!-- Card Body -->
+            <div class="card-body">
+                <div class="chart-pie pt-4">
+                    <canvas id="myPieChart"></canvas>
+                </div>
+                <hr>
+                Styling for the donut chart can be found in the
+                <code>/js/demo/chart-pie-demo.js</code> file.
+            </div>
+        </div>
+    </div>
+</div>
+
+</div>
+    {% endblock content %}
+
+
+    {% block js %} 
+    <script>
+       
+    
+    </script>
+    {% endblock js %}
+   
+
+   

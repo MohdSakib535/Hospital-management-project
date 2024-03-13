@@ -1,0 +1,107 @@
+{% extends 'dashboard/index.html' %}
+{% load static %}
+
+{% block css %} 
+<style>
+    .img-profile{
+        width:50px;
+        height:50px;
+        object-fit:cover;
+    } 
+    .swal-button--confirm{
+         background-color: #f05884 !important;
+    }
+</style>
+{% endblock css %}
+
+
+
+
+
+{% block content %}
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800"> Doctor Admitted Data</h1>
+    {% comment %} <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
+            class="fas fa-download fa-sm text-white-50"></i> Generate Report</a> {% endcomment %}
+</div>
+
+
+    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+
+        <!-- Area Chart -->
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">List</h6>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>patient img</th>
+                                <th>patient Name</th>
+                                <th>symptoms</th>
+                                <th>admitted date</th>
+                                <th>releate date</th>
+                                
+                                
+                                
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for i in admitted_patient_data %}
+                            <tr>
+                             
+                                <td>{{forloop.counter}}</td>
+                                <td>
+                                    <img class="img-profile rounded-circle "
+                                    src="{{i.patientId.img.url}}" alt='error'>
+                                </td>
+                                <td>{{i.patientId.patient_user.name}}</td>
+                                <td>{{i.symptoms}}</td>
+                                <td>{{i.admitDate}}</td>
+
+                                <td>
+                                    {% if not  i.status_by_doctor %}
+                                    <button class='btn btn-info' onclick="Discharge_patient(this,{{i.patientId.id}})" type='submit'>Discharge</button>
+                                    {% else %}
+                                    <button class='btn btn-success' type='submit'>Discharged</button>
+
+                                    {% endif %}
+                                </td>
+                               
+                                
+                            </tr>
+                            {% endfor %}
+                            
+                            
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</div>
+    {% endblock content %}
+
+
+    {% block js %} 
+    <script>
+        function fun1(){
+            setTimeout(
+                swal("Are you sure you want to do this?", {
+                    buttons: ["cancel", "Delete"],
+                  });
+
+                , 3000);
+
+            
+        }
+    </script>
+    {% endblock js %}
+   
+
+   
